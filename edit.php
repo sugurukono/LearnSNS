@@ -19,13 +19,15 @@ $stmt->execute($data);
 $feed = $stmt->fetch(PDO::FETCH_ASSOC);
 
 //今データを格納した$feedを使って、画面に編集データを表示しましょう。
+//更新処理（更新ボタンが押された時発動）
 if (!empty($_POST)) {
-    $update_sql = "UPDATE `feeds` SET `feed` = ? WHERE `feeds`.`id` = ?";
+    $update_sql = "UPDATE `feeds` SET `feed` = ? WHERE `feeds`.`id` = ?";//更新したつぶやきをDBに上書き保存する
 
     $data = array($_POST["feed"],$feed_id);
+    //SQL文の実行
     $stmt = $dbh->prepare($update_sql);
     $stmt->execute($data);
-
+    //タイムラインへの遷移
     header("Location: timeline.php");
     exit();
 }
