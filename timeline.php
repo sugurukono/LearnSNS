@@ -3,8 +3,6 @@
     session_start();
     require('functions.php');
     require('dbconnect.php');
-    $validations=[];
-    $feed="";
 
     $data = array($_SESSION['id']);
     $sql = 'SELECT * FROM `users` WHERE `id` = ?';
@@ -50,6 +48,34 @@
             //取得できるデータはすべて取得できているので、繰り返しを中断する
             break;
         }
+
+        //いいね済みかどうかの確認
+        $like_flag_sql = "SELECT * FROM `likes` WHERE `user_id` = ? AND `feed_id` = ?";
+        $like_flag_data = [$signin_user['id'], $feed['id']];
+        $like_flad_stmt = $dbh->prepare($like_flag_sql);
+        $like_flad_stmt->execute($like_flag_data);
+
+        $is_liked = $like_flag_stmt->fetch(PDO::FETCH_ASSOC);
+
+        //三項演算子（if文の省略形。代入のみの場合に使える）
+        $feed['is_liked'] = $is_liked ? true:false;
+        //下のif文と全く一緒
+        //if ($is_liked) {
+          //$feed['is_liked'] = true;
+        //}else{$feed['is_liked'] = false; }
+
+        //$feed連想配列にlike数を格納するキーを用意し、数字を代入する
+        //代入するlike数を取得するSQL文の実行
+        $like_sql = 'SELECT COUNT(*) as `like_count` FROM `likes` WHERE `feed_id` = ?';
+        $like_data = array($feed['id']);
+        $like_stmt = $dbh->prepare($like_sql);
+        $like_stmt->execute($like_data);
+
+        $like_count_data = $like_stmt->fetch(PDO::FETCH_ASSOC);
+
+        $feed['like_count'] = $like_count_data['like_count'];
+
+        //v($feed,'$feed');
 
         $feeds[] = $feed; //[]は、配列の末尾にデータを追加するという意味
     }
@@ -98,6 +124,7 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
+            <span hidden id="signin-user"><?php echo $signin_user['id']; ?></span>
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="user_profile_img/<?php echo $signin_user['img_name']; ?>" width="40" class="img-circle"><span>  </span><?php echo $signin_user['name']; ?> <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">マイページ</a></li>
@@ -131,40 +158,15 @@
           </form>
         </div>
 
-        <?php foreach ($feeds as $feed_each) { ?>
-          <div class="thumbnail">
-            <div class="row">
-              <div class="col-xs-1">
-                <img src="user_profile_img/<?php echo $feed_each['profile_image']; ?>" width="40">
-              </div>
-              <div class="col-xs-11">
-                <?php echo $feed_each["name"] ?><br>
-                <a href="#" style="color: #7F7F7F;"><?php echo $feed_each["created"] ?></a>
-              </div>
-            </div>
-            <div class="row feed_content">
-              <div class="col-xs-12" >
-                <span style="font-size: 24px;"><?php echo $feed_each["feed"]; ?></span>
-              </div>
-            </div>
-            <div class="row feed_sub">
-              <div class="col-xs-12">
-                <form method="POST" action="" style="display: inline;">
-                  <input type="hidden" name="feed_id" >
-                  
-                    <input type="hidden" name="like" value="like">
-                    <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-thumbs-up" aria-hidden="true"></i>いいね！</button>
-                </form>
-                <span class="like_count">いいね数 : <?php echo $feed_each["like_count"]; ?></span>
-                <span class="comment_count">コメント数 : <?php echo $feed_each["comment_count"]; ?></span>
-                  <?php if($signin_user['id'] == $feed_each["user_id"]): ?>
-                  <a href="edit.php?feed_id=<?= $feed_each['id'];?>" class="btn btn-success btn-xs">編集</a>
-                  <a href="#" class="btn btn-danger btn-xs">削除</a>
-                  <?php endif; ?>
-              </div>
-            </div>
-          </div><!--class="thumnail"のとじタグ -->
-        <?php } ?>
+        <?php foreach ($feeds as $feed_each ) {
+          //require と include の違い
+          //どちらも外部ファイルを読み込む時に使用される
+          //require。。。読み込んだ外部ファイル内でエラーが発生した場合、処理を中断する。
+          //include。。。読み込んだ外部ファイル内でエラーが発生した場合、処理を続行する。
+          //require。。。DB接続などのエラーが出ると致命的な処理に使用
+          //include。。。HTML、CSSなど表示系に使用（一部表示にエラーが出ていても処理ができる可能性がある）
+          include("timeline_row.php");
+        } ?>
 
         <div aria-label="Page navigation">
           <ul class="pager">
@@ -178,5 +180,7 @@
   <script src="assets/js/jquery-3.1.1.js"></script>
   <script src="assets/js/jquery-migrate-1.4.1.js"></script>
   <script src="assets/js/bootstrap.js"></script>
+  <script src="assets/js/app.js"></script>
+
 </body>
 </html>

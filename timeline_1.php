@@ -1,36 +1,3 @@
-          <div class="thumbnail">
-            <div class="row">
-              <div class="col-xs-1">
-                <img src="https://placehold.jp/40x40.png" width="40">
-              </div>
-              <div class="col-xs-11">
-                野原ひろし<br>
-                <a href="#" style="color: #7F7F7F;">2018-03-03</a>
-              </div>
-            </div>
-            <div class="row feed_content">
-              <div class="col-xs-12" >
-                <?php if(isset($validations['feed']) && $validations['feed'] != 'blank'): ?>
-                  <span style="font-size: 24px;"><?php echo $validations['feed']; ?></span>
-                <?php endif; ?>
-              </div>
-            </div>
-            <div class="row feed_sub">
-              <div class="col-xs-12">
-                <form method="POST" action="" style="display: inline;">
-                  <input type="hidden" name="feed_id" >
-                  
-                    <input type="hidden" name="like" value="like">
-                    <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-thumbs-up" aria-hidden="true"></i>いいね！</button>
-                </form>
-                <span class="like_count">いいね数 : 100</span>
-                <span class="comment_count">コメント数 : 9</span>
-                  <a href="#" class="btn btn-success btn-xs">編集</a>
-                  <a href="#" class="btn btn-danger btn-xs">削除</a>
-              </div>
-            </div>
-          </div>
-
 <?php
   // timeline.phpの処理を記載
 session_start();
@@ -153,39 +120,18 @@ if(!empty($_POST)){
             <?php endif; ?>
           </form>
         </div>
-        <?php foreach ($feeds as $feed_each ) {
-          //require と include の違い
-          //どちらも外部ファイルを読み込む時に使用される
-          //require。。。読み込んだ外部ファイル内でエラーが発生した場合、処理を中断する。
-          //include。。。読み込んだ外部ファイル内でエラーが発生した場合、処理を続行する。
-          //require。。。DB接続などのエラーが出ると致命的な処理に使用
-          //include。。。HTML、CSSなど表示系に使用（一部表示にエラーが出ていても処理ができる可能性がある）
-          include("timeline_row.php");
-        } ?>
-        <div aria-label="Page navigation">
-          <ul class="pager">
-            <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Newer</a></li>
-            <li class="next"><a href="#">Older <span aria-hidden="true">&rarr;</span></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script src="assets/js/jquery-3.1.1.js"></script>
-  <script src="assets/js/jquery-migrate-1.4.1.js"></script>
-  <script src="assets/js/bootstrap.js"></script>
-</body>
-</html>
-
-
-<div class="thumbnail">
+        <?php foreach ($feeds as $feed_each ) {?>
+        
+          <div class="thumbnail">
             <div class="row">
               <div class="col-xs-1">
-                <img src="user_profile_img/<?php echo $feed_each['profile_image']; ?>" width="40">
+                <img src="user_profile_img/<?php echo $feed_each['profile_image'];?>" width="70">
+                <!-- [<a href="signout.php">サインアウト</a>] -->
+
               </div>
               <div class="col-xs-11">
-                <?php echo $feed_each["name"] ?><br>
-                <a href="#" style="color: #7F7F7F;"><?php echo $feed_each["created"] ?></a>
+                <?php echo $feed_each["name"]."<br>"; ?>
+                <a href="#" style="color: #7F7F7F;"><?php echo $feed_each["created"]; ?></a>
               </div>
             </div>
             <div class="row feed_content">
@@ -201,14 +147,29 @@ if(!empty($_POST)){
                     <input type="hidden" name="like" value="like">
                     <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-thumbs-up" aria-hidden="true"></i>いいね！</button>
                 </form>
-                <span class="like_count">いいね数 : <?php echo $feed_each["like_count"]; ?></span>
-                <span class="comment_count">コメント数 : <?php echo $feed_each["comment_count"]; ?></span>
-                  <?php if($signin_user['id'] == $feed_each["user_id"]): ?>
-                  <a href="edit.php?feed_id=<?= $feed_each['id'];?>" class="btn btn-success btn-xs">編集</a>
-                  <a href="#" class="btn btn-danger btn-xs">削除</a>
-                  <?php endif; ?>
+                <span class="like_count">いいね数 : 100</span>
+                <span class="comment_count">コメント数 : 9</span>
+                <?php if ($_SESSION["id"]==$feed_each['user_id']) :?> 
+                  <a href="edit.php?feed_id=<?= $feed_each['id'];?>"s class="btn btn-success btn-xs">編集</a>
+                  <a onclick="return confirm('ほんとに消すの？');" href="delete.php?feed_id=<?= $feed_each['id'];?>" class="btn btn-danger btn-xs">削除</a>
+                  <!-- ?はGET送信という意味 -->
+                <?php endif;?>
               </div>
             </div>
-          </div><!--class="thumnail"のとじタグ -->
-
-          $feed['like_count'] = 2;
+          </div>
+          <!-- <?php  v($feed_each,'$feed_each'); ?> -->
+        <?php } ?>
+        <div aria-label="Page navigation">
+          <ul class="pager">
+            <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Newer</a></li>
+            <li class="next"><a href="#">Older <span aria-hidden="true">&rarr;</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/jquery-3.1.1.js"></script>
+  <script src="assets/js/jquery-migrate-1.4.1.js"></script>
+  <script src="assets/js/bootstrap.js"></script>
+</body>
+</html>
