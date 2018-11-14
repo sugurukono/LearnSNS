@@ -4,7 +4,6 @@
 
     $feed_id = $_POST["feed_id"];
     $user_id = $_POST["user_id"];
-    $is_liked = $_POST["is_liked"];
 
     if (isset($_POST["is_liked"])) {
         //いいねボタンが押された時

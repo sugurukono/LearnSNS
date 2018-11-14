@@ -1,6 +1,7 @@
 $(function(){
   //いいね処理
-  $('.js-like').on('click', function(){
+  $(document).on('click', '.js-like', function() {
+    //$('.js-like').on('click', function(){
     //user_id,feed_id 取得できてるか確認
     //$(this) 今のイベントを発動させた部品
       var feed_id = $(this).siblings('.feed_id').text();
@@ -30,6 +31,10 @@ $(function(){
       if (data == 'true') {
         like_count++;//like_count+1と同じ意味
         like_btn.siblings('.like_count').text(like_count);//プラス1した筋を上書き
+
+        like_btn.removeClass('js-like');  //ボタンからlikeボタンであの目印であるクラスjs-likeを削除
+        like_btn.addClass('js-unlike');  //ボタンにいいねを取り消すボタンの目印になるクラスjs-unlikeを追加
+        like_btn.children('span').text('いいねを取り消す');  //ボタンの表記を変更
       }
     })
     .fail(function(err){
@@ -39,7 +44,8 @@ $(function(){
   })
 
   //いいねを取り消す処理
-  $('.js-unlike').on('click', function(){
+    $(document).on('click', '.js-unlike', function() {
+  // $('.js-unlike').on('click', function(){
     //user_id,feed_id 取得できてるか確認
     //$(this) 今のイベントを発動させた部品
     var feed_id = $(this).siblings('.feed_id').text();
@@ -67,7 +73,11 @@ $(function(){
       console.log(data);
       if (data == 'true') {
         like_count--;//like_count-1と同じ意味
-        like_btn.siblings('.like_count').text(like_count);//プラス1した筋を上書き
+        like_btn.siblings('.like_count').text(like_count);//マイナス1した筋を上書き
+
+        like_btn.removeClass('js-unlike');  //ボタンからlikeボタンであの目印であるクラスjs-likeを削除
+        like_btn.addClass('js-like');  //ボタンにいいねを取り消すボタンの目印になるクラスjs-unlikeを追加
+        like_btn.children('span').text('いいね！');  //ボタンの表記を変更
       }
     })
     .fail(function(err){

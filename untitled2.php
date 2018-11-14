@@ -212,3 +212,14 @@ if(!empty($_POST)){
           </div><!--class="thumnail"のとじタグ -->
 
           $feed['like_count'] = 2;
+
+          <input type="button" class="btn btn-default" value="24時間" style="width: 330px ">
+          <input type="button" class="btn btn-default" value="1週間" style="width: 330px ">
+
+          <form method="post" action="../album/album.php">
+              <button class="btn btn-primary">写真を保存する</button>
+            </form>
+
+          <select name="pref" style="width: 300px ">
+            <option value="0">期間を指定する</option>
+          </select>
