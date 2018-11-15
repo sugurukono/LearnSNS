@@ -332,3 +332,38 @@ if(!empty($_POST)){
           <select name="pref" style="width: 300px ">
             <option value="0">期間を指定する</option>
           </select>
+
+＜検索の種類＞
+
+完全一致検索（全く同じであればヒットする）
+SELECT * FROM `feeds` WHERE `feed`='強い'
+
+○強い
+×君は強い
+
+前方一致検索（前方が全く同じものであればヒットする）
+SELECT * FROM `feeds` WHERE `feed` LIKE '強い%'
+
+○強い
+○強いチーム
+×君は強い
+
+後方一致検索（後方が全く同じであればヒットする）
+SELECT * FROM `feeds` WHERE `feed` LIKE '%強い'
+
+○強い
+×強いチーム
+○君は強い
+×君は強いチームにいるよね
+
+中間一致検索（途中に全く同じものがあればヒットする）
+SELECT * FROM `feeds` WHERE `feed` LIKE '%強い%'
+
+○強い
+○強いチーム
+○君は強い
+○君は強いチームにいるよね
+
+
+
+
