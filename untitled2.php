@@ -364,6 +364,15 @@ SELECT * FROM `feeds` WHERE `feed` LIKE '%強い%'
 ○君は強い
 ○君は強いチームにいるよね
 
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#demoNormalModal">写真を編集</button>
+
+while (true) {
+        $feed = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($feed == false) {
+            //取得できるデータはすべて取得できているので、繰り返しを中断する
+            break;
+        }
 
 
 
