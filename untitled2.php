@@ -374,5 +374,46 @@ while (true) {
             break;
         }
 
+<?php echo $signin_user['user_img']; ?>
+
+$file_name = $_FILES['img_name']['name'];
+    v($file_name, '$file_name');
+    if ($file_name == '') {
+        $validations['img_name'] = 'blank';
+    }
+
+    $data = array($_SESSION['id']);
+    $pref = array('6時間','24時間','3日','１週間','無期限');
+    $sql = 'SELECT * FROM `pics` WHERE `id` = 1';
+
+    $stmt = $dbh->prepare($sql);//アロー演算子の左側をオブジェクトという
+    $stmt->execute($data);
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $validations = array();
+    $feed = '';
+
+    if (!empty($_POST)) {
+        $feed = $_POST['feed'];
+
+        if ($feed == '') {
+            $validations['feed'] = 'blank';
+        }else{
+            $sql = 'INSERT INTO `pics` SET `pic_name` = ?, `comment` = ?, `user_id` = ?, `limit_time` = ?, `created` = NOW()';
+            $stmt = $dbh->prepare($sql);
+            $data = array($signin_user['id'], $feed);
+            $stmt->execute($data);
+        }
+    }
+
+    <form method="POST" action="../album_register/album_register.php">
+              <button class="btn btn-primary">写真を保存する</button>
+            </form>
+
+      $comment = $_POST['comment'];
+      $limit_time = $_POST['limit_time'];
+
+
+
 
 
