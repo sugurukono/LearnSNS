@@ -27,7 +27,7 @@
 
         $file_name = $_FILES['input_img_name']['name'];
         if (!empty($file_name)) {
-          # code...
+          # code...//拡張子のチェック
         }else{
             $validations['img_name'] = 'blank';
         }

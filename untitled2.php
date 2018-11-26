@@ -414,6 +414,64 @@ $file_name = $_FILES['img_name']['name'];
       $limit_time = $_POST['limit_time'];
 
 
+session_start();
+    require('../functions.php');
+
+
+
+    $file_name = $_FILES['img_name']['name'];
+    v($file_name, '$file_name');
+    if ($file_name == '') {
+        $validations['img_name'] = 'blank';
+    }
+
+    $data = array($_SESSION['id']);
+    $pref = array('6時間','24時間','3日','１週間','無期限');
+    $sql = 'SELECT * FROM `pics` WHERE `id` = 1';
+
+    $stmt = $dbh->prepare($sql);//アロー演算子の左側をオブジェクトという
+    $stmt->execute($data);
+    $signin_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $validations = array();
+    $feed = '';
+
+    if (!empty($_POST)) {
+        $hash_password = password_hash($password, PASSWORD_DEFAULT);
+        //DB登録処理
+        //usersテーブルにユーザー情報の登録処理
+        $sql = 'INSERT INTO `users` SET `name` = ?, `email` = ?, `password` = ?, `img_name` = ?, `created` = NOW()';
+        $stmt = $dbh->prepare($sql);
+        $data = array($name, $email, $hash_password, $file_name);
+        $stmt->execute($data);
+
+        unset($_SESSION['46_LearnSNS']);//テータを残しておかない。消す
+        header('Location: thanks.php');
+        exit();//処理を終了させる
+        
+    }
+
+
+    $pref_num = -1; //0以外のデータを初期化
+    if (!empty($_POST)) {
+      $pref_num = $_POST['pref'];
+    }
+
+    $c = count($pref);
+
+<select name="time">
+          <option value="-1">選択してください</option>
+          <?php for($i=0; $i < $c; $i++): ?>
+            <?php if ($i == $time_num): ?>
+              <!--前回選択されたvalue（都道府県）なのでoptionタグにselected属性をつける　-->
+              <option value="<?php echo $i; ?>" selected><?php echo $time[$i]; ?></option>
+            <?php else: ?>
+              <!--前回選択されたvalueと一致しないもしくはそもそもPOST送信されていないのでoptionタグをそのまま表示-->
+              <option value="<?php echo $i; ?>"><?php echo $time[$i]; ?></option>
+              <?php endif; ?>
+          <?php endfor; ?>
+        </select>
+
 
 
 
